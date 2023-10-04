@@ -28,9 +28,15 @@ class Sondage
     #[ORM\OneToMany(mappedBy: 'sondage', targetEntity: Question::class)]
     private Collection $questions;
 
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\JoinTable(name: 'sondage_votants')]
+    private Collection $votants;
+
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
+        $this->votants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,4 +109,18 @@ class Sondage
 
         return $this;
     }
+
+    public function addVotant(User $user): void
+    {
+        if(!$this->votants->contains($user))
+        {
+            $this->votants->add($user);
+        }
+    }
+
+    public function isVotant(User $user)
+    {
+        return $this->votants->contains($user);
+    }
+
 }

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voter{% endblock %}
+
+{% block body %}
+{% for sondage in sondages %}
+    <h2>{{ sondage.titre }}</h2>
+    <form method="post" action="{{ path('vote', {'sondageId': sondage.id}) }}">
+        {% for question in sondage.questions %}
+            <h3>{{ question.texte }}</h3>
+            <ul>
+                {% for reponse in question.reponses %}
+                    <li>
+                        <input type="checkbox" name="reponses[]" value="{{ reponse.id }}">
+                        {{ reponse.texte }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+        <button type="submit">Voter</button>
+    </form>
+{% endfor %}
+{% endblock %}

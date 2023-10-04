@@ -160,9 +160,9 @@ class User implements UserInterface
     {
          // Utilisez les informations de l'utilisateur pour générer le token
          $tokenData = $this->name . $this->surname . $this->email . $this->sex . $this->birthDate . $this->birthPlace;
-         $token = Uuid::v5(Uuid::NAMESPACE_DNS, $tokenData); // Utilisez UUID v5 pour créer un token unique
+         $token = hash('sha256', $tokenData);
 
-         return $token->toString();
+         return $token;
     }
 
     public function getToken(): ?string
