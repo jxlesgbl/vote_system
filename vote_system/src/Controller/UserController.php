@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,11 +22,23 @@ class UserController extends AbstractController
             'path' => 'src/Controller/UserController.php',
         ]);
     }
-
-    public function register(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/', name: 'index_register')]
+    public function register(Request $request, EntityManagerInterface $entityManager, User $user): Response
     {
-        $user = new User();
-        // Remplir les données de l'utilisateur à partir du formulaire
+        $form = $this->createForm(UserType::class, $user);
+
+        // Gérer la soumission du formulaire
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = new User();
+            // Enregistrer le sondage en base de données
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Rediriger l'utilisateur vers une page de succès ou ailleurs
+            return $this->redirectToRoute('sondages_actifs');
+        }
 
         // Générez le token unique
         $token = $user->generateToken();
