@@ -20,6 +20,10 @@ class Answer
     #[ORM\ManyToOne(inversedBy: 'answers')]
     private ?Question $question = null;
 
+    #[ORM\ManyToOne(inversedBy: 'answers', targetEntity: Sondage::class)]
+    #[ORM\JoinColumn(nullable:false)]
+    private ?Sondage $sondage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +49,18 @@ class Answer
     public function setQuestion(?Question $question): static
     {
         $this->question = $question;
+
+        return $this;
+    }
+
+    public function getSondage(): ?Sondage
+    {
+        return $this->sondage;
+    }
+
+    public function setSondage(?Sondage $sondage): self
+    {
+        $this->sondage = $sondage;
 
         return $this;
     }

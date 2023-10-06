@@ -3,21 +3,23 @@
 {% block title %}Voter{% endblock %}
 
 {% block body %}
+{% include "navbar.html.twig" %}
 {% for sondage in sondages %}
     <h2>{{ sondage.titre }}</h2>
-    <form method="post" action="{{ path('vote', {'sondageId': sondage.id}) }}">
+    {{ form_start(form, {'action': path('vote', {'sondageId': sondage.id}), 'method': 'POST'}) }}
         {% for question in sondage.questions %}
             <h3>{{ question.texte }}</h3>
             <ul>
                 {% for reponse in question.reponses %}
                     <li>
-                        <input type="checkbox" name="reponses[]" value="{{ reponse.id }}">
-                        {{ reponse.texte }}
+                        {{ form_widget(form.reponses) }}
+                        {{ form_label(form.reponses, reponse.texte) }}
                     </li>
                 {% endfor %}
             </ul>
         {% endfor %}
+        {{ form_row(form._token) }}
         <button type="submit">Voter</button>
-    </form>
+    {{ form_end(form) }}
 {% endfor %}
 {% endblock %}

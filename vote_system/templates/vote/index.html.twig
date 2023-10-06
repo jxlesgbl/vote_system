@@ -3,27 +3,27 @@
 {% block title %}Vote{% endblock %}
 
 {% block body %}
+{% include "navbar.html.twig" %}
 
     <div class="card" style="width: 18rem;">
         <img src="https://picsum.photos/200" class="card-img-top" alt="...">
         <div class="card-body">
-            <h5 class="card-title">Referendum bidule</h5>
-            <p class="card-text">Texte Explicatif de vote </p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error fugit, tempore voluptatum cum facere assumenda eius sapiente. .</p>
+            <h5 class="card-title">{{ sondage.titre }}</h5>
+            <p class="card-text">{{ sondage.texteExplicatif }}</p>
+            <p>{{ sondage.texte }}</p>
             <div id="vote">
-                <div>
-                    <input type="radio" id="oui" value="oui" name="vote" />
-                    <label for="oui">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" id="non" value="non" name="vote" />
-                    <label for="non">Non</label>
-                </div>
+                {% for question in sondage.questions %}
+                    <div>
+                        <input type="radio" id="{{ question.id }}" value="{{ question.id }}" name="vote" />
+                        <label for="{{ question.id }}">{{ question.texte }}</label>
+                    </div>
+                {% endfor %}
             </div>
             <div class="btn">
-            <button id="envoyer">Voter</button>
-        </div>
+                <button id="envoyer">Voter</button>
+            </div>
         </div>
     </div>
+
 
 {% endblock %}

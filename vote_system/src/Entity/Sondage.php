@@ -19,24 +19,34 @@ class Sondage
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private $description;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateStart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateEnd = null;
 
-    #[ORM\OneToMany(mappedBy: 'sondage', targetEntity: Question::class)]
-    private Collection $questions;
+    #[ORM\OneToOne(targetEntity: Question::class, mappedBy: 'sondage', cascade: ['persist', 'remove'])]
+    private ?Question $question = null;
+
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question', orphanRemoval: true)]
+    private Collection $answers;
 
     #[ORM\ManyToMany(targetEntity: User::class)]
     #[ORM\JoinTable(name: 'sondage_votants')]
     private Collection $votants;
 
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $actif = null;
+
+
 
     public function __construct()
     {
-        $this->questions = new ArrayCollection();
         $this->votants = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,6 +63,17 @@ class Sondage
     {
         $this->title = $title;
 
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -80,33 +101,30 @@ class Sondage
         return $this;
     }
 
-    /**
-     * @return Collection<int, Question>
-     */
-    public function getQuestions(): Collection
+    public function getQuestion(): ?Question
     {
-        return $this->questions;
+        return $this->question;
     }
 
-    public function addQuestion(Question $question): static
+    public function setQuestion(Question $question): static
     {
-        if (!$this->questions->contains($question)) {
-            $this->questions->add($question);
-            $question->setSondage($this);
-        }
+
+        $this->question = $question;
 
         return $this;
     }
 
-    public function removeQuestion(Question $question): static
+    public function getAnswers(): Collection
     {
-        if ($this->questions->removeElement($question)) {
-            // set the owning side to null (unless already changed)
-            if ($question->getSondage() === $this) {
-                $question->setSondage(null);
-            }
-        }
+        return $this->answers;
+    }
 
+    public function setAnswers(Answer $answers): self
+    {
+        if (!$this->answers->contains($answers)) {
+            $this->answers[] = $answers;
+            $answers->setSondage($this);
+        }
         return $this;
     }
 
@@ -121,6 +139,17 @@ class Sondage
     public function isVotant(User $user)
     {
         return $this->votants->contains($user);
+    }
+
+    public function getActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(?bool $actif): self
+    {
+        $this->actif = $actif;
+        return $this;
     }
 
 }

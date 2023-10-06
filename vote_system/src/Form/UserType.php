@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,8 +31,16 @@ class UserType extends AbstractType
             ->add('birthPlace', TextType::class, [
                 'label' => 'Lieu de naissance',
             ])
-            ->add('sex', TextType::class, [
+            ->add('sex', ChoiceType::class, [
                 'label' => 'Sexe',
+                'choices' => [
+                    'Homme' => 'Homme',
+                    'Femme' => 'Femme',
+                    'Autre' => 'Autre',
+                ],
+                'multiple' => false,
+                'expanded' => true,
+
             ])
             ->add('submit', SubmitType::class);
         ;

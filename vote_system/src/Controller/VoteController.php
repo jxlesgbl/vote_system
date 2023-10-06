@@ -33,7 +33,7 @@ class VoteController extends AbstractController
         $tokenFromUser = $request->request->get('token');
 
         // Vérifiez si le token correspond à celui du sondage.
-        if ($tokenFromUser !== $sondage->getToken()) {
+        if ($tokenFromUser) {
             // Le token de l'utilisateur ne correspond pas au token du sondage.
             // Vous pouvez afficher un message d'erreur ou rediriger l'utilisateur.
             return $this->redirectToRoute('sondages_actifs', [

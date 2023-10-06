@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Question;
 use App\Entity\Sondage;
+use App\Form\SondageType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,12 +48,18 @@ class SondageController extends AbstractController
         ]);
     }
 
-    #[Route('/sondage/new', name: 'create_sondage')]
+    #[Route('/sondage-new', name: 'create_sondage')]
     public function newSondage(Request $request, EntityManagerInterface $entityManager)
     {
         $sondage = new Sondage();
+        // $question = $sondage->getQuestion();
+        // $sondage->setQuestion($question);
+
+        // if($question){
+        //     $answers = $question->getAnswers();
+        // }
         // Créer un formulaire pour la création du sondage (vous devrez créer un FormType pour cela)
-        $form = $this->createForm(SondageFormType::class, $sondage);
+        $form = $this->createForm(SondageType::class, $sondage);
 
         // Gérer la soumission du formulaire
         $form->handleRequest($request);
@@ -68,6 +76,7 @@ class SondageController extends AbstractController
         // Afficher le formulaire dans le template Twig
         return $this->render('sondage/sondage_new.html.twig', [
             'form' => $form->createView(),
+            'sondage' => $sondage
         ]);
     }
 }

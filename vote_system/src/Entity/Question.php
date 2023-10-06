@@ -59,9 +59,7 @@ class Question
         return $this;
     }
 
-    /**
-     * @return Collection<int, Answer>
-     */
+    
     public function getAnswers(): Collection
     {
         return $this->answers;

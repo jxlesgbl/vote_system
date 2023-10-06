@@ -1,35 +1,52 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <div class="bigFormCreation">
+{% include "navbar.html.twig" %}
 
-        {{ form_start(form) }}
+<div class="row m-5">
+    <div class="col-md-12">
 
-        <div class="form-group">
-            {{ form_label(form.title) }}
-            {{ form_widget(form.title) }}
+        <div class="bigFormCreation">
+
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, { 'attr': { 'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description, { 'attr': { 'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.dateStart) }}
+                {{ form_widget(form.dateStart, { 'attr': { 'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.dateEnd) }}
+                {{ form_widget(form.dateEnd, { 'attr': { 'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.question) }}
+                {{ form_widget(form.question, { 'attr': { 'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.answer) }}
+                {{ form_widget(form.answer, { 'attr': { 'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Créer Sondage</button>
+            </div>
+
+            {{ form_end(form) }}
+
         </div>
-
-        <div class="form-group">
-            {{ form_label(form.description) }}
-            {{ form_widget(form.description) }}
-        </div>
-
-        <div class="form-group">
-            {{ form_label(form.dateStart) }}
-            {{ form_widget(form.dateStart) }}
-        </div>
-
-        <div class="form-group">
-            {{ form_label(form.dateEnd) }}
-            {{ form_widget(form.dateEnd) }}
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Créer Sondage</button>
-        </div>
-
-        {{ form_end(form) }}
-
     </div>
+</div>
 {% endblock %}

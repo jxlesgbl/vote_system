@@ -1,28 +1,30 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Voter{% endblock %}
 
 {% block body %}
-
-    {{ form_start(form) }}
-
-    <div class="form-group">
-        {{ form_label(form.sondage) }}
-        {{ form_widget(form.sondage) }}
+{% for sondage in sondages %}
+    <div class="card" style="width: 18rem;">
+        <img src="https://picsum.photos/200" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ sondage.title }}</h5>
+            <p class="card-text">{{ sondage.description }}</p>
+            <p>{{ sondage.dateStart|date('Y-m-d H:i:s') }} - {{ sondage.dateEnd|date('Y-m-d H:i:s') }}</p>
+            <div id="vote">
+                <form method="post" action="{{ path('vote', {'sondageId': sondage.id}) }}">
+                    <h3>{{ sondage.question.text }}</h3>
+                    <ul>
+                        {% for answer in sondage.question.answers %}
+                            <li>
+                                <input type="checkbox" name="reponses[]" value="{{ answer.id }}">
+                                {{ answer.text }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="submit">Voter</button>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        {{ form_label(form.user) }}
-        {{ form_widget(form.user) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(form.selectedOption) }}
-        {{ form_widget(form.selectedOption) }}
-    </div>
-
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Enregistrer Vote</button>
-    </div>
-
-    {{ form_end(form) }}
-
+{% endfor %}
 {% endblock %}

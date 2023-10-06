@@ -14,24 +14,25 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
-    }
     #[Route('/', name: 'index_register')]
-    public function register(Request $request, EntityManagerInterface $entityManager, User $user): Response
+    public function register(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = new User();
+        // Remplir les données de l'utilisateur à partir du formulaire
+
         $form = $this->createForm(UserType::class, $user);
 
         // Gérer la soumission du formulaire
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = new User();
+
+            // Générez le token unique
+            $token = $user->generateToken();
+
+            // On associe le token aux données de l'utilisateur
+            $user->setToken($token);
+
             // Enregistrer le sondage en base de données
             $entityManager->persist($user);
             $entityManager->flush();
@@ -40,20 +41,8 @@ class UserController extends AbstractController
             return $this->redirectToRoute('sondages_actifs');
         }
 
-        // Générez le token unique
-        $token = $user->generateToken();
-
-        // On associe le token aux données de l'utilisateur
-        $user->setToken($token);
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-
-        // Redirigez l'utilisateur vers une page de confirmation ou une autre page appropriée
-        $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant voter.');
-
-        // Redirigez l'utilisateur vers la page de confirmation ou une autre page
-        return $this->redirectToRoute('vote');
+        return $this->render('user/form_user.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
